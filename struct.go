@@ -2,7 +2,7 @@ package goarg
 
 import "reflect"
 
-var FlagList []any
+var FlagList []*any
 
 type intFlag struct {
 	FlagVar  *int

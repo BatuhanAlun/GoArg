@@ -1,6 +1,9 @@
 package goarg
 
-import "reflect"
+import (
+	"os"
+	"reflect"
+)
 
 func findFlagType(value interface{}) reflect.Type {
 	flagType := reflect.TypeOf(value)
@@ -19,6 +22,15 @@ func createBoolFlag(value *bool, flagName string, defVal bool, usageMessage stri
 	return boolFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType}
 }
 
-func addFlag[T boolFlag | intFlag | stringFlag](flag T) {
-	FlagList = append(FlagList, flag)
+func addFlag(flag any) {
+	FlagList = append(FlagList, &flag)
+}
+
+func createRFlagNameList() []string {
+	var rFlagNameList []string
+	for _, v := range os.Args[1:] {
+		rFlagName := v[1:]
+		rFlagNameList = append(rFlagNameList, rFlagName)
+	}
+	return rFlagNameList
 }

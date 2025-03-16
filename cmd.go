@@ -2,6 +2,7 @@ package goarg
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 )
 
@@ -24,4 +25,13 @@ func AddArg(value any, flagName string, defVal any, usageMessage string) error {
 		return fmt.Errorf("unkown type")
 	}
 	return nil
+}
+
+func Parse() {
+	var args []string = os.Args[1:]
+	rFlagNameList := createRFlagNameList()
+	for _, v := range args {
+		rFlagName := v[1:]
+	}
+
 }
