@@ -30,10 +30,12 @@ func createFlagMapValuePair() map[string]any {
 	flagAndValues := make(map[string]any)
 
 	for index, v := range os.Args[1:] {
-		if v[0] == '-' && os.Args[1:][index+1][0] != '-' {
-			flagAndValues[v] = os.Args[1:][index+1]
+		if v[0] == '-' && index+1 == len(os.Args[1:]) {
+			flagAndValues[v] = true
 		} else if v[0] == '-' && os.Args[1:][index+1][0] == '-' {
 			flagAndValues[v] = true
+		} else if v[0] == '-' && os.Args[1:][index+1][0] != '-' {
+			flagAndValues[v] = os.Args[1:][index+1]
 		}
 	}
 	return flagAndValues
