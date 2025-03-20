@@ -13,13 +13,13 @@ func AddArg(value any, flagName string, defVal any, usageMessage string, strict 
 	fType := findFlagType(value)
 	if fType == reflect.TypeOf(pint) {
 		retval := createIntFlag(value.(*int), flagName, defVal.(int), usageMessage, fType, strict)
-		addFlag(retval)
+		addFlag(&retval)
 	} else if fType == reflect.TypeOf(pstr) {
 		retval := createStringFlag(value.(*string), flagName, defVal.(string), usageMessage, fType, strict)
-		addFlag(retval)
+		addFlag(&retval)
 	} else if fType == reflect.TypeOf(pbool) {
 		retval := createBoolFlag(value.(*bool), flagName, defVal.(bool), usageMessage, fType, strict)
-		addFlag(retval)
+		addFlag(&retval)
 	} else {
 		return fmt.Errorf("unkown type")
 	}
@@ -27,7 +27,8 @@ func AddArg(value any, flagName string, defVal any, usageMessage string, strict 
 }
 
 func Parse() {
-	rFlagNameList := createFlagMapValuePair()
-	fmt.Println(rFlagNameList)
+	argMap := createFlagMapValuePair()
+	mandatoryArgs := getMandatoryArgs()
+	checkArgs(argMap, mandatoryArgs)
 
 }

@@ -1,6 +1,7 @@
 package goarg
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 )
@@ -22,8 +23,8 @@ func createBoolFlag(value *bool, flagName string, defVal bool, usageMessage stri
 	return boolFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType, FlagMandatory: strict}
 }
 
-func addFlag(flag any) {
-	FlagList = append(FlagList, &flag)
+func addFlag(flag IFlag) {
+	FlagList = append(FlagList, flag)
 }
 
 func createFlagMapValuePair() map[string]any {
@@ -39,4 +40,26 @@ func createFlagMapValuePair() map[string]any {
 		}
 	}
 	return flagAndValues
+}
+
+func getMandatoryArgs() []IFlag {
+	var mandatoryArgs []IFlag
+	for _, v := range FlagList {
+		if v.IsMandatory() {
+			mandatoryArgs = append(mandatoryArgs, v)
+		}
+	}
+	return mandatoryArgs
+}
+
+func checkArgs(argMap map[string]any, mandatoryArgs []IFlag) {
+	if len(argMap) < len(mandatoryArgs) {
+		err(fmt.Errorf("please be sure to insert Mandatory Arguments"))
+	}
+	for _, v := range mandatoryArgs {
+		_, ok := argMap["-"+v.GetFlagName()]
+		if !ok {
+			err(fmt.Errorf("missing mandatory flag"))
+		}
+	}
 }
