@@ -1,6 +1,7 @@
 package goarg
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 )
@@ -26,11 +27,17 @@ func addFlag(flag any) {
 	FlagList = append(FlagList, &flag)
 }
 
-func createRFlagNameList() []string {
-	var rFlagNameList []string
-	for _, v := range os.Args[1:] {
-		rFlagName := v[1:]
-		rFlagNameList = append(rFlagNameList, rFlagName)
+func createFlagMapValuePair() map[string]any {
+	flagAndValues := make(map[string]any)
+
+	for index, v := range os.Args[1:] {
+		if v[1] == '-' && os.Args[1:][index+1][1] != '-' {
+			flagAndValues[v] = os.Args[1:][index+1]
+		} else if v[1] == '-' && os.Args[1:][index+1][1] == '-' {
+			flagAndValues[v] = true
+		} else {
+			err(fmt.Errorf("flag value could not parsed"))
+		}
 	}
-	return rFlagNameList
+	return flagAndValues
 }

@@ -27,7 +27,7 @@ func AddArg(value any, flagName string, defVal any, usageMessage string, strict 
 }
 
 func Parse() {
-	rFlagNameList := createRFlagNameList()
+	rFlagNameList := createFlagMapValuePair()
 	fmt.Println(rFlagNameList)
 
 }
