@@ -1,7 +1,6 @@
 package goarg
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 )
@@ -12,15 +11,15 @@ func findFlagType(value interface{}) reflect.Type {
 }
 
 func createIntFlag(value *int, flagName string, defVal int, usageMessage string, fType reflect.Type, strict bool) intFlag {
-	return intFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType}
+	return intFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType, FlagMandatory: strict}
 }
 
 func createStringFlag(value *string, flagName string, defVal string, usageMessage string, fType reflect.Type, strict bool) stringFlag {
-	return stringFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType}
+	return stringFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType, FlagMandatory: strict}
 }
 
 func createBoolFlag(value *bool, flagName string, defVal bool, usageMessage string, fType reflect.Type, strict bool) boolFlag {
-	return boolFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType}
+	return boolFlag{FlagVar: value, FlagName: flagName, FlagDef: defVal, FlagHelp: usageMessage, FlagType: fType, FlagMandatory: strict}
 }
 
 func addFlag(flag any) {
@@ -35,8 +34,6 @@ func createFlagMapValuePair() map[string]any {
 			flagAndValues[v] = os.Args[1:][index+1]
 		} else if v[1] == '-' && os.Args[1:][index+1][1] == '-' {
 			flagAndValues[v] = true
-		} else {
-			err(fmt.Errorf("flag value could not parsed"))
 		}
 	}
 	return flagAndValues
