@@ -1,6 +1,9 @@
 package goarg
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 var FlagList []IFlag
 
@@ -33,6 +36,8 @@ type IFlag interface {
 	GetHelp() string
 	IsMandatory() bool
 	GetFlagName() string
+	GetFlagType() reflect.Type
+	SetValue(newVal any)
 }
 
 func (f *intFlag) GetHelp() string {
@@ -44,6 +49,19 @@ func (f *intFlag) IsMandatory() bool {
 func (f *intFlag) GetFlagName() string {
 	return f.FlagName
 }
+func (f *intFlag) GetFlagPointer() any {
+	return f.FlagVar
+}
+func (f *intFlag) GetFlagType() reflect.Type {
+	return f.FlagType
+}
+func (f *intFlag) SetValue(newVal any) {
+	if val, ok := newVal.(int); ok {
+		*f.FlagVar = val
+	} else {
+		err(fmt.Errorf("setting wrong type"))
+	}
+}
 
 func (f *stringFlag) GetHelp() string {
 	return f.FlagHelp
@@ -54,6 +72,17 @@ func (f *stringFlag) IsMandatory() bool {
 func (f *stringFlag) GetFlagName() string {
 	return f.FlagName
 }
+func (f *stringFlag) GetFlagPointer() any {
+	return f.FlagVar
+}
+func (f *stringFlag) GetFlagType() reflect.Type {
+	return f.FlagType
+}
+func (f *stringFlag) SetValue(newVal any) {
+	if val, ok := newVal.(string); ok {
+		*f.FlagVar = val
+	}
+}
 
 func (f *boolFlag) GetHelp() string {
 	return f.FlagHelp
@@ -63,4 +92,15 @@ func (f *boolFlag) IsMandatory() bool {
 }
 func (f *boolFlag) GetFlagName() string {
 	return f.FlagName
+}
+func (f *boolFlag) GetFlagPointer() any {
+	return f.FlagVar
+}
+func (f *boolFlag) GetFlagType() reflect.Type {
+	return f.FlagType
+}
+func (f *boolFlag) SetValue(newVal any) {
+	if val, ok := newVal.(bool); ok {
+		*f.FlagVar = val
+	}
 }

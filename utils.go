@@ -63,3 +63,36 @@ func checkArgs(argMap map[string]any, mandatoryArgs []IFlag) {
 		}
 	}
 }
+
+func giveValuesToArgs(argMap map[string]any) {
+	var counter int
+	if len(FlagList) != len(argMap) {
+		err(fmt.Errorf("wrong arg number"))
+	}
+	for _, value := range FlagList {
+		key, ok := argMap[value.GetFlagName()]
+		if !ok {
+			counter++
+		} else {
+			giveValueToPointers(value, key)
+		}
+		if counter == len(FlagList) {
+			err(fmt.Errorf("missing argument"))
+		}
+	}
+}
+
+func giveValueToPointers(value IFlag, key any) {
+	v := value.GetFlagType().Kind()
+	switch v {
+	case reflect.Int:
+		value.SetValue(key.(int))
+	case reflect.String:
+		value.SetValue(key.(string))
+	case reflect.Bool:
+		value.SetValue(key.(bool))
+	default:
+		err(fmt.Errorf("unknown type"))
+	}
+
+}
