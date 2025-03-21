@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
 )
 
 func findFlagType(value interface{}) reflect.Type {
@@ -70,7 +71,7 @@ func giveValuesToArgs(argMap map[string]any) {
 		err(fmt.Errorf("wrong arg number"))
 	}
 	for _, value := range FlagList {
-		key, ok := argMap[value.GetFlagName()]
+		key, ok := argMap["-"+value.GetFlagName()]
 		if !ok {
 			counter++
 		} else {
@@ -83,14 +84,22 @@ func giveValuesToArgs(argMap map[string]any) {
 }
 
 func giveValueToPointers(value IFlag, key any) {
-	v := value.GetFlagType().Kind()
+	v := value.GetFlagType().Elem().Kind()
 	switch v {
 	case reflect.Int:
-		value.SetValue(key.(int))
+		val, errr := strconv.Atoi(key.(string))
+		if errr != nil {
+			err(errr)
+		}
+		value.SetValue(val)
 	case reflect.String:
 		value.SetValue(key.(string))
 	case reflect.Bool:
-		value.SetValue(key.(bool))
+		val, errr := strconv.ParseBool(key.(string))
+		if errr != nil {
+			err(errr)
+		}
+		value.SetValue(val)
 	default:
 		err(fmt.Errorf("unknown type"))
 	}
