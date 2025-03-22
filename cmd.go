@@ -27,6 +27,7 @@ func AddArg(value any, flagName string, defVal any, usageMessage string, strict 
 }
 
 func Parse() {
+	checkHelp()
 	argMap := createFlagMapValuePair() // map[flag]{value}
 	mandatoryArgs := getMandatoryArgs()
 	checkArgs(argMap, mandatoryArgs)

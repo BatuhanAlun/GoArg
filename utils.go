@@ -95,13 +95,16 @@ func giveValueToPointers(value IFlag, key any) {
 	case reflect.String:
 		value.SetValue(key.(string))
 	case reflect.Bool:
-		val, errr := strconv.ParseBool(key.(string))
-		if errr != nil {
-			err(errr)
-		}
-		value.SetValue(val)
+		value.SetValue(key)
 	default:
 		err(fmt.Errorf("unknown type"))
 	}
 
+}
+
+func checkHelp() {
+	if os.Args[1] == "-h" || os.Args[1] == "--help" {
+		fmt.Println("Help Method Called")
+		os.Exit(1)
+	}
 }
