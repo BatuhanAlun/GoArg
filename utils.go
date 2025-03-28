@@ -67,9 +67,9 @@ func checkArgs(argMap map[string]any, mandatoryArgs []IFlag) {
 
 func giveValuesToArgs(argMap map[string]any) {
 	var counter int
-	if len(FlagList) != len(argMap) {
-		err(fmt.Errorf("wrong arg number"))
-	}
+	// if len(FlagList) != len(argMap) {
+	// 	err(fmt.Errorf("wrong arg number"))
+	// }
 	for _, value := range FlagList {
 		key, ok := argMap["-"+value.GetFlagName()]
 		if !ok {
@@ -104,7 +104,22 @@ func giveValueToPointers(value IFlag, key any) {
 
 func checkHelp() {
 	if os.Args[1] == "-h" || os.Args[1] == "--help" {
-		fmt.Println(HelpMessage)
+		fmt.Printf("Title: %s\n", HelpMessage.Title)
+		fmt.Printf("Explanation: %s\n", HelpMessage.Explanation)
+		fmt.Println("Usages:")
+		printExamples()
 		os.Exit(1)
+	}
+}
+
+func GetExamples() {
+	for _, v := range FlagList {
+		UsageExampleSlice.Examples = append(UsageExampleSlice.Examples, v.GetHelp())
+	}
+}
+
+func printExamples() {
+	for _, v := range HelpMessage.Examples.Examples {
+		fmt.Println(v)
 	}
 }
