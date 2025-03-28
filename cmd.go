@@ -26,6 +26,16 @@ func AddArg(value any, flagName string, defVal any, usageMessage string, strict 
 	return nil
 }
 
+func DeclareUsage(title, explanation string) {
+	HelpMessage.Title = title
+	HelpMessage.Explanation = explanation
+	HelpMessage.Examples = UsageExampleSlice
+}
+
+func AddUsageExample(exampleString string) {
+	UsageExampleSlice.Examples = append(UsageExampleSlice.Examples, exampleString)
+}
+
 func Parse() {
 	checkHelp()
 	argMap := createFlagMapValuePair() // map[flag]{value}

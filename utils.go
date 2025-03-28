@@ -104,7 +104,7 @@ func giveValueToPointers(value IFlag, key any) {
 
 func checkHelp() {
 	if os.Args[1] == "-h" || os.Args[1] == "--help" {
-		fmt.Println("Help Method Called")
+		fmt.Println(HelpMessage)
 		os.Exit(1)
 	}
 }

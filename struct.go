@@ -6,6 +6,17 @@ import (
 )
 
 var FlagList []IFlag
+var UsageExampleSlice UsageExamples
+var HelpMessage Usage
+
+type UsageExamples struct {
+	Examples []string
+}
+type Usage struct {
+	Title       string
+	Explanation string
+	Examples    UsageExamples
+}
 
 type intFlag struct {
 	FlagVar       *int
