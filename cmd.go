@@ -2,6 +2,7 @@ package goarg
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 )
 
@@ -38,6 +39,9 @@ func DeclareUsage(title, explanation string) {
 // }
 
 func Parse() {
+	if len(os.Args) < 2 {
+		err(fmt.Errorf("no args provied"))
+	}
 	checkHelp()
 	argMap := createFlagMapValuePair() // map[flag]{value}
 	mandatoryArgs := getMandatoryArgs()
