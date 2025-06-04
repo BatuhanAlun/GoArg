@@ -95,11 +95,22 @@ func giveValueToPointers(value IFlag, key any) {
 	case reflect.String:
 		value.SetValue(key.(string))
 	case reflect.Bool:
-		value.SetValue(key)
+
+		if boolVal, ok := key.(bool); ok {
+			value.SetValue(boolVal)
+		} else if strVal, ok := key.(string); ok {
+
+			parsedBool, errr := strconv.ParseBool(strVal)
+			if errr != nil {
+				err(fmt.Errorf("invalid boolean value for flag %s: %v", value.GetFlagName(), errr))
+			}
+			value.SetValue(parsedBool)
+		} else {
+			err(fmt.Errorf("unexpected type for boolean flag %s: %T", value.GetFlagName(), key))
+		}
 	default:
 		err(fmt.Errorf("unknown type"))
 	}
-
 }
 
 func checkHelp() {
