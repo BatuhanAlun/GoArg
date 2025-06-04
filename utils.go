@@ -146,3 +146,19 @@ func printExamples() {
 		fmt.Println(v)
 	}
 }
+
+func checkUnknownFlags(argMap map[string]any) {
+	definedFlags := make(map[string]bool)
+	for _, f := range FlagList {
+		definedFlags["-"+f.GetFlagName()] = true
+		definedFlags["--"+f.GetFlagName()] = true
+	}
+
+	for arg := range argMap {
+		if arg[0] == '-' {
+			if _, found := definedFlags[arg]; !found {
+				err(fmt.Errorf("unknown flag: %s", arg))
+			}
+		}
+	}
+}

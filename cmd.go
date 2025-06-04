@@ -41,6 +41,7 @@ func Parse() {
 	checkHelp()
 	argMap := createFlagMapValuePair() // map[flag]{value}
 	mandatoryArgs := getMandatoryArgs()
+	checkUnknownFlags(argMap)
 	checkArgs(argMap, mandatoryArgs)
 	giveValuesToArgs(argMap)
 }
