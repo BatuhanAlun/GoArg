@@ -66,19 +66,31 @@ func checkArgs(argMap map[string]any, mandatoryArgs []IFlag) {
 }
 
 func giveValuesToArgs(argMap map[string]any) {
-	var counter int
-	// if len(FlagList) != len(argMap) {
-	// 	err(fmt.Errorf("wrong arg number"))
-	// }
-	for _, value := range FlagList {
-		key, ok := argMap["-"+value.GetFlagName()]
-		if !ok {
-			counter++
+	for _, flag := range FlagList {
+
+		if valFromArgs, ok := argMap["-"+flag.GetFlagName()]; ok {
+
+			if flag.GetFlagType().Elem().Kind() == reflect.Bool {
+
+				if bVal, isBool := valFromArgs.(bool); isBool {
+					flag.SetValue(bVal)
+				} else if sVal, isString := valFromArgs.(string); isString {
+					parsedBool, errr := strconv.ParseBool(sVal)
+					if errr != nil {
+
+						err(fmt.Errorf("invalid boolean value for flag %s: %v", flag.GetFlagName(), errr))
+					}
+					flag.SetValue(parsedBool)
+				} else {
+
+					err(fmt.Errorf("unexpected type for boolean flag %s value: %T", flag.GetFlagName(), valFromArgs))
+				}
+			} else {
+				giveValueToPointers(flag, valFromArgs)
+			}
 		} else {
-			giveValueToPointers(value, key)
-		}
-		if counter == len(FlagList) {
-			err(fmt.Errorf("missing argument"))
+
+			flag.SetValue(flag.GetDefaultValue())
 		}
 	}
 }

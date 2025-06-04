@@ -49,6 +49,7 @@ type IFlag interface {
 	GetFlagName() string
 	GetFlagType() reflect.Type
 	SetValue(newVal any)
+	GetDefaultValue() any
 }
 
 func (f *intFlag) GetHelp() string {
@@ -114,4 +115,16 @@ func (f *boolFlag) SetValue(newVal any) {
 	if val, ok := newVal.(bool); ok {
 		*f.FlagVar = val
 	}
+}
+
+func (f *intFlag) GetDefaultValue() any {
+	return f.FlagDef
+}
+
+func (f *stringFlag) GetDefaultValue() any {
+	return f.FlagDef
+}
+
+func (f *boolFlag) GetDefaultValue() any {
+	return f.FlagDef
 }
